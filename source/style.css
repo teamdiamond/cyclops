@@ -1,0 +1,65 @@
+/* base classes*/
+QMainWindow, QDockWidget {
+    background-color: #333333;
+}
+
+QCheckBox {
+    color: white;
+    background-color: #333333;
+}
+
+QDialog {
+    background-color: #333333;
+}
+
+QGroupBox, QDockWidget {
+    color: #cccccc;
+}
+
+QLabel {
+    color: white;
+}
+
+QListWidget, QTableWidget {
+    background-color: #1c1c1c;
+    color: white;
+}
+
+QToolButton {
+    border-radius: 3px;
+}
+
+QToolButton:hover {
+    background-color: #4c4c4c;
+}
+
+QToolButton:checked {
+    background-color: #006600;
+}
+
+QwtPlot {
+    background-color: black;
+    border: 1px solid #999999;
+}
+
+QwtScaleWidget, QwtScaleDraw {
+    color: white;
+}
+
+QWidget {
+    font-size: 8pt;
+    font-family: "Tahoma";
+}
+
+/* overloaded stuff */
+AutoPanel {
+    /* background-color: #999999; */
+}
+
+HugeDisplay {
+    /* background-color: #333333; */
+    color: lime;
+    font: bold 32pt;    
+}
+
+
