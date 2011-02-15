@@ -1,1 +1,1 @@
-Search.setIndex({objects:{},terms:{index:0,search:0,welcom:0,cyclop:0,modul:0,indic:0,content:0,tabl:0,document:0,page:0},objtypes:{},titles:["Welcome to cyclops&#8217;s documentation!"],objnames:{},filenames:["index"]})
+Search.setIndex({objects:{},terms:{index:0,search:0,welcom:0,cyclop:[0,1],modul:0,work:1,indic:0,content:0,tabl:0,need:1,qtlab:1,you:1,document:0,instal:[0,1],page:0,requir:[0,1],first:1},objtypes:{},titles:["Welcome to cyclops&#8217;s documentation!","Cyclops installation"],objnames:{},filenames:["index","installation"]})
