@@ -102,7 +102,8 @@ class CyclopeanInstrument(Instrument):
 
         # to be able to make use of other, already existing instruments
         self._instruments = {}
-        for i in use: self._use_instrument(i)
+        for i in use:
+            self._use_instrument(i, use[i])
         
         # default values
         self.set_sampling_interval(100)
@@ -173,49 +174,48 @@ class CyclopeanInstrument(Instrument):
 
     # TODO: instead of specifying manually what should be accessible,
     # just get everything via get_parameters and get_functions?
-    def _use_instrument(self, name):
+    def _use_instrument(self, name, alias):
         from qt import instruments
-        self._instruments[name] = instruments[name]
+        
+        self._instruments[alias] = instruments[name]
         print ' * using', instruments[name].get_name(), 'from', self.get_name()
 
-        i = self._instruments[name]
+        i = self._instruments[alias]
 
         # iterate through parameters:
         # we need a local variable and the get/set functions
         params = i.get_parameters()
         for p in params:
-            if not p in self.CYCLOPEAN_PARAMS:
+            p_name = alias + '_' + p
+            var_name = '_' + p_name
+            # local variable
+            if 'get_func' in params[p]:
+                setattr(self, var_name, getattr(i, 'get_' + p)())
+            else:
+                setattr(self, var_name, None)
 
-                p_name = name + '_' + p
-                var_name = '_' + p_name
-                # local variable
-                if 'get_func' in params[p]:
-                    setattr(self, var_name, getattr(i, 'get_' + p)())
-                else:
-                    setattr(self, var_name, None)
-
-                # define the get and set functions
-                if 'get_func' in params[p]:
-                    self._make_get(name, p)
+            # define the get and set functions
+            if 'get_func' in params[p]:
+                self._make_get(alias, p)
                     
-                if 'set_func' in params[p]:
-                    self._make_set(name, p)
+            if 'set_func' in params[p]:
+                self._make_set(alias, p)
 
-                # add the parameter, qtlab style
-                units = ''
-                type = types.NoneType
-                if 'units' in params[p]: units = params[p]['units']
-                if 'type' in params[p]: type = params[p]['type']
-                
-                self.add_parameter(p_name,
-                                   flags = params[p]['flags'],
-                                   type = type,
-                                   units = units)
+            # add the parameter, qtlab style
+            units = ''
+            type = types.NoneType
+            if 'units' in params[p]: units = params[p]['units']
+            if 'type' in params[p]: type = params[p]['type']
+               
+            self.add_parameter(p_name,
+                               flags = params[p]['flags'],
+                               type = type,
+                               units = units)
 
         # connect, so changes become visible here immediately
         def f(unused, changes, *arg, **kw):
             for c in changes:
-                p_name = name + '_' + c
+                p_name = alias + '_' + c
                 var_name = '_' + p_name
                 get_name = 'get' + var_name
                 if hasattr(self, get_name):
@@ -226,9 +226,7 @@ class CyclopeanInstrument(Instrument):
         # also make the functions accessible
         funcs = i.get_function_names()
         for f in funcs:
-            if not f in self.CYCLOPEAN_FUNCS:
-                self._make_func(name, f)
-                
+            self._make_func(alias, f)                
 
         return
 
@@ -251,7 +249,8 @@ class CyclopeanInstrument(Instrument):
 
     def _make_func(self, name, func):
         f_name = name + '_' + func
-        def f(*arg, **kw):
-            setattr(self, f_name,
-                    lambda *arg, **kw: getattr(self._instruments[name], func))()
+        setattr(self, f_name,
+                lambda *arg, **kw: getattr(self._instruments[name], func)())
+        self.add_function(f_name)
+        return
 
