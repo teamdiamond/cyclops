@@ -8,16 +8,18 @@ from plot import Plot
 
 class LinePlotCurve(Qwt.QwtPlotCurve):
     """
-    Curve for 2D line plots. No exptras so far, lacks functionality.
+    Curve for 2D line plots. No extras so far, lacks functionality.
     Is, atm, only overloaded QwtPlotCurve with default color cyan.
     """
 
-    def __init__(self, color=Qt.Qt.cyan):
+    def __init__(self, color=Qt.Qt.cyan, width=2,
+                 style=Qwt.QwtPlotCurve.Lines):
         Qwt.QwtPlotCurve.__init__(self)
 
         pen = Qt.QPen(color)
-        pen.setWidth(2)
+        pen.setWidth(width)
         self.setPen(pen)
+        self.setStyle(style)
 
 class LinePlot(Plot):
     """
@@ -25,3 +27,12 @@ class LinePlot(Plot):
     """
     def __init__(self, parent):
         Plot.__init__(self, parent)
+
+
+    def add_curve(self, x, y, color=Qt.Qt.cyan, width=2,
+                  style=Qwt.QwtPlotCurve.Lines):
+        curve = LinePlotCurve(color, width, style)
+        curve.attach(self)
+        curve.setData(x, y)
+        self.replot()
+        

@@ -91,11 +91,13 @@ class PanelDialog(QtGui.QMainWindow):
             self._auto_panel_dock.setWindowTitle('Panel && instrument options')
             self.addDockWidget(Qt.Qt.BottomDockWidgetArea,
                                self._auto_panel_dock)
+            # hide by default, takes too much space
+            self._auto_panel_dock.setVisible(False)
 
             menu_tools_autopanel = self._menu_tools.addAction(
                 'Panel && instrument opts')
             menu_tools_autopanel.setCheckable(True)
-            menu_tools_autopanel.setChecked(True)
+            menu_tools_autopanel.setChecked(False)
             menu_tools_autopanel.toggled.connect(
                 self._auto_panel_dock.setVisible)
             self._auto_panel_dock.visibilityChanged.connect(
