@@ -126,7 +126,7 @@ param_inputs = {
         'default_min' : '0.0',
         'default_max' : '99.0',
         'value_property' : 'value',
-        'value_type' : 'number',
+        'value_type' : 'double',
         'widget_set' : 'setValue',
         'widget_signal' : 'valueChanged',
         },
@@ -383,12 +383,15 @@ def _instrument_add_parameter(w):
 
         # minimum value
         if p.getAttribute('name') == 'minimum':
-            minval = p.getElementsByTagName('number')[0].firstChild.data
+            minval = p.getElementsByTagName(
+                param_inputs[classname]['value_type'])[0].firstChild.data
+
 
         # maximum value
         if p.getAttribute('name') == 'maximum':
-            maxval = p.getElementsByTagName('number')[0].firstChild.data
-
+            maxval = p.getElementsByTagName(
+                param_inputs[classname]['value_type'])[0].firstChild.data
+            
         # enabled (if not, we treat as read-only parameter)
         if p.getAttribute('name') == 'enabled':
             if p.getElementsByTagName('bool')[0].firstChild.data == 'false':

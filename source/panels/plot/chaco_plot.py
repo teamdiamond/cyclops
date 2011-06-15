@@ -30,11 +30,14 @@ class CrossHair(HasTraits):
 
     cursor = Instance(BaseCursorTool)
     cursor_pos = DelegatesTo('cursor', prefix='current_position')
+    drag_state = DelegatesTo('cursor', prefix='_drag_state')
 
-    def __init__(self, plot, signal):
+    # FIXME: implement dragging signal
+    def __init__(self, plot, pos_signal, drag_signal=None):
         super(CrossHair, self).__init__()
 
-        self._signal = signal
+        self._pos_signal = pos_signal
+        self._drag_signal = drag_signal
         
         csr = CursorTool(plot,
                          drag_button='left',
@@ -43,11 +46,20 @@ class CrossHair(HasTraits):
                          marker_size=2.0)
         self.cursor = csr
         csr.current_position = 0.0, 0.0
-
         plot.overlays.append(csr)
 
+        self.is_being_dragged = False
+
     def _cursor_pos_changed(self):
-        self._signal.emit(self.cursor_pos[0], self.cursor_pos[1])   
+        # only emit if user drags, not for automated set
+        if self.drag_state == 'dragging':
+            self._pos_signal.emit(self.cursor_pos[0], self.cursor_pos[1])
+
+    def _drag_state_changed(self):
+        if self.drag_state == 'dragging':
+            self.is_being_dragged = True
+        else:
+            self.is_being_dragged = False
 
 
 class DataPicker(BaseTool):
@@ -67,7 +79,9 @@ class DataPicker(BaseTool):
 class BasePlot(QtGui.QWidget):
 
     crosshair_moved = QtCore.pyqtSignal(float, float)
+    crosshair_dragged = QtCore.pyqtSignal(bool)
     mouse_moved = QtCore.pyqtSignal(float, float)
+    
 
     def __init__(self, parent, **kw):
         QtGui.QWidget.__init__(self, parent)
@@ -78,13 +92,17 @@ class BasePlot(QtGui.QWidget):
         self.plot = None
         self.data = None
         
-        self.enable_win = self._create_window()
+        self.enable_win = self._create_window(**kw)
         self._create_axes()
         layout = QtGui.QVBoxLayout()
         layout.setMargin(0)
         layout.addWidget(self.enable_win.control)
         self.setLayout(layout)
         self.show()
+
+    def clear(self):
+        for p in self.plot.plots:
+            self.plot.delplot(p)
 
     def enable_crosshair(self, name):
         self.crosshair = CrossHair(self.plot.plots[name][0],
@@ -116,10 +134,10 @@ class BasePlot(QtGui.QWidget):
         self.bottom_axis = PlotAxis(self.plot,
                                     orientation='bottom',
                                     title='y')
-        self.plot.underlays.append(self.left_axis)
-        self.plot.underlays.append(self.bottom_axis)
+        self.plot.overlays.append(self.left_axis)
+        self.plot.overlays.append(self.bottom_axis)
         
-    def _create_window(self):
+    def _create_window(self, **kw):
         pass
 
     # a function for debugging. not used in practice.
@@ -161,7 +179,7 @@ class ColorPlot(BasePlot):
         self.plot.color_mapper = self._colormap(value_range)
         self._container.request_redraw()
 
-    def set_data(self, x, y, z):
+    def set_data(self, x, y, z, **kw):
         self.data.set_data('2d_data', z)
         if self.plot.plots.has_key(self._plotname):
             self.plot.delplot(self._plotname)
@@ -176,12 +194,18 @@ class ColorPlot(BasePlot):
                            name = self._plotname,
                            xbounds = (x0, x1),
                            ybounds = (y0, y1),
-                           colormap = self._colormap)[0]
+                           colormap = self._colormap, **kw)[0]
+
+        # if we have a cursor, need to redraw
+        if hasattr(self, 'crosshair'):
+            #pos = self.crosshair.cursor_pos
+            self.enable_crosshair('color_plot')
+            #self.crosshair.cursor_pos = pos
         
 
     ### private methods
 
-    def _create_window(self):
+    def _create_window(self, **kw):
         self._colormap = default_colormaps.jet       
         
         self.data = ArrayPlotData()
@@ -191,15 +215,15 @@ class ColorPlot(BasePlot):
         y = linspace(-10, 10, 101)
         z = zeros((101,101))
 
-        self.set_data(x, y, z)
+        self.set_data(x, y, z, **kw)
         
         # self.set_data(x,y,z)        
         self._create_colorbar()
-        self._container = HPlotContainer(use_backbuffer=True)
-        self._container.add(self.plot)
-        self._container.add(self._colorbar)
+        self.container = HPlotContainer(use_backbuffer=True)
+        self.container.add(self.plot)
+        self.container.add(self._colorbar)
         
-        return Window(self, -1, component=self._container)
+        return Window(self, -1, component=self.container)
 
     def _create_colorbar(self):
         cmap = self.plot.color_mapper
@@ -231,7 +255,8 @@ class LinePlot(BasePlot):
 
     def add_y(self, y, yname, **kw):
         self.data.set_data(yname, y)
-        self.plot.plot(('x', yname), **kw)
+        self.plot.plot(('x', yname), name=yname, **kw)
+        self.plot.request_redraw()
         
     def set_x(self, x):
         self.data.set_data('x', x)
@@ -249,7 +274,7 @@ class TracePlot(BasePlot):
     def __init__(self, parent, **kw):
 
         self._type = kw.pop('type', 'scatter')
-        self._nr_of_points = kw.pop('nr_of_points', 0)
+        self.nr_of_points = kw.pop('nr_of_points', 0)
         # TODO: more options
         
         BasePlot.__init__(self, parent, **kw)
@@ -260,7 +285,7 @@ class TracePlot(BasePlot):
         self._set_data()
 
     def set_nr_of_points(self, n):
-        self._nr_of_points = n
+        self.nr_of_points = n
         self._set_data()
 
     def reset(self):
@@ -269,14 +294,14 @@ class TracePlot(BasePlot):
         self._set_data()
 
     def _set_data(self):
-        if self._nr_of_points > 0:
-            while len(self._x) > self._nr_of_points:
+        if self.nr_of_points > 0:
+            while len(self._x) > self.nr_of_points:
                 self._x = self._x[1:]
                 self._y = self._y[1:]
         self.data.set_data('x', self._x)
         self.data.set_data('y', self._y)
         
-    def _create_window(self):
+    def _create_window(self, **kw):
         self.data = ArrayPlotData()
         self.plot = Plot(self.data)
 
@@ -294,7 +319,7 @@ class TracePlot(BasePlot):
 class TimeTracePlot(TracePlot):
     def __init__(self, parent, **kw):
         
-        self._display_time = kw.pop('display_time', 0)
+        self.display_time = kw.pop('display_time', 0)
         
         TracePlot.__init__(self, parent, **kw)
 
@@ -309,11 +334,14 @@ class TimeTracePlot(TracePlot):
 
     def reset(self):
         TracePlot.reset(self)
-        self._zero = time.time()        
+        self._zero = time.time()
+
+    def set_display_time(self, t):
+        self.display_time = t
 
     def _set_data(self):
-        if self._display_time > 0:
-            while self._x[-1] - self._x[0] > self._display_time:
+        if self.display_time > 0:
+            while self._x[-1] - self._x[0] > self.display_time:
                 self._x = self._x[1:]
                 self._y = self._y[1:]
         self.data.set_data('x', self._x)

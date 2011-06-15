@@ -72,8 +72,8 @@ if __name__ == "__main__":
     sock.connect(('localhost', PORT))    
     handler = _QtDummyHandler(sock, 'client', 'server')
     
-    cyclops_main = MainWindow()
-    cyclops_main.show()
+    mainwindow = MainWindow()
+    mainwindow.show()
     
-    sys.exit(cyclops_app.exec_())
+    # sys.exit(cyclops_app.exec_())
 
