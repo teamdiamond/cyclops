@@ -75,5 +75,5 @@ if __name__ == "__main__":
     mainwindow = MainWindow()
     mainwindow.show()
     
-    # sys.exit(cyclops_app.exec_())
+    sys.exit(cyclops_app.exec_())
 
