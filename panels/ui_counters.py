@@ -61,5 +61,5 @@ class Ui_Panel(object):
         self.counts2.setText(QtGui.QApplication.translate("Panel", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Panel", "time span [s] (0: all time)", None, QtGui.QApplication.UnicodeUTF8))
 
-from plot.chaco_plot import TimeTracePlot
+from chaco_plot import TimeTracePlot
 from panel import HugeDisplay

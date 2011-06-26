@@ -10,7 +10,7 @@
 # connect a dummy counter instrument automatically, its available
 # as self._ins within the panel class
 
-from panels.counters import CounterPanel
+from counters import CounterPanel
 add_panel(CounterPanel, title='Counts', sampling=200, ins='counters_demo')
 
 # an example 2d scan

@@ -6,7 +6,7 @@ SET GTK_BASEPATH=%CD%\..\3rd_party\gtk
 SET PATH=%CD%\..\3rd_party\Console2\;%PATH%
 SET PATH=C:\Qt\2010.02.1\qt\bin;C:\Qt\2010.02.1\bin;C:\Qt\2010.02.1\mingw\bin;%PATH%
 
-start Console -w "Cyclops" -r "/k c:\python26\python c:\python26\scripts\ipython.py -gthread -p sh source/cyclops.py scan_example.py"
+start Console -w "Cyclops" -r "/k c:\python27\python c:\python27\scripts\ipython.py -gthread -p sh source/start_cyclops.py scan_example.py"
 
-:: c:\python26\python.exe source/cyclops.py scan_example.py
+:: c:\python26\python.exe source/start_cyclops.py scan_example.py
 exit

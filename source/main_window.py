@@ -7,6 +7,7 @@ import ConfigParser
 from PyQt4 import QtCore, QtGui, Qt
 from lib import config as _cfg
 from ui_main_window import Ui_mainWindow
+import cyclops
 from panels.panel import Panel, PanelDialog
 
 # some constants
@@ -23,9 +24,12 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.setupUi(self)
 
         # load the user panel config
-        self._cyclops_dir = os.path.join(os.getcwd())
-        sys.path.append(self._cyclops_dir)
-        sys.path.append(os.path.join(self._cyclops_dir, 'source'))   
+        if cyclops.config.has_key('panels_dirs'):
+            for d in cyclops.config['panels_dirs']:
+                sys.path.append(d)
+        if cyclops.config.has_key('plots_dirs'):
+            for d in cyclops.config['plots_dirs']:
+                sys.path.append(d)
         self.load_user_panels()
 
         # set full screen
