@@ -8,7 +8,7 @@ from PyQt4 import QtCore, QtGui, Qt
 from lib import config as _cfg
 from ui_main_window import Ui_mainWindow
 import cyclops
-from panels.panel import Panel, PanelDialog
+from panel import Panel, PanelDialog
 
 # some constants
 PANEL_CFG = 'cyclops_panels.py'

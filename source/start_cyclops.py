@@ -63,7 +63,8 @@ class _QtDummyHandler(QtTCPHandler):
 # here we go...
 if __name__ == "__main__":
     
-    print 'abc'
+    # default config
+    from cyclops import config
 
     # load user config
     if os.path.exists(CONFIG_FILE):
