@@ -149,4 +149,4 @@ class Ui_Panel(object):
         self.label_8.setText(QtGui.QApplication.translate("Panel", "zoom size [um]", None, QtGui.QApplication.UnicodeUTF8))
         self.do_zoom.setText(QtGui.QApplication.translate("Panel", "Zoom", None, QtGui.QApplication.UnicodeUTF8))
 
-from plot.chaco_plot import ColorPlot
+from chaco_plot import ColorPlot
