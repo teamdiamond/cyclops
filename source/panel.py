@@ -12,7 +12,6 @@
 # Author: Wolfgang Pfaff <w.pfaff@tudelft.nl>
 
 from PyQt4 import QtCore, QtGui, Qt
-from PyQt4.Qwt5 import Qwt
 from lib.network.object_sharer import helper
 
 class Panel(QtGui.QWidget):

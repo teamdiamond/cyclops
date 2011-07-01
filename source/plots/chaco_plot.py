@@ -9,6 +9,7 @@ from numpy import linspace, r_, meshgrid, sinc, zeros, exp
 
 # Qt imports
 from PyQt4 import QtGui, Qt, QtCore
+#from enthought.qt import QtGui, Qt, QtCore
 
 # enthought
 from enthought.enable.api import BaseTool, Window
