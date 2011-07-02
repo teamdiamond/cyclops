@@ -68,7 +68,7 @@ class CyclopeanInstrument(Instrument):
                            Gives the cycle frequency of the internal timer that can be used
                            for pseudo-asynchronous operations.
                            """)
-
+        
         self.add_parameter('is_running',
                            type=types.BooleanType,
                            flags=Instrument.FLAG_GETSET,
@@ -78,7 +78,7 @@ class CyclopeanInstrument(Instrument):
                            What 'running' exactly is, depends on the instrument and its
                            implementation.
                            """)
-
+        
         self.add_parameter('is_recording',
                            type=types.BooleanType,
                            flags=Instrument.FLAG_GETSET,
@@ -97,8 +97,8 @@ class CyclopeanInstrument(Instrument):
         self.add_function('save')
 
         # common cyclops attributes
-        self.CYCLOPEAN_PARAMS = ['sampling_interval', 'is_running', 'is_recording']
-        self.CYCLOPEAN_FUNCS = ['save', 'is_supported', 'supported']
+        #self.CYCLOPEAN_PARAMS = ['sampling_interval', 'is_running', 'is_recording']
+        #self.CYCLOPEAN_FUNCS = ['save', 'is_supported', 'supported']
 
         # to be able to make use of other, already existing instruments
         self._instruments = {}
@@ -121,10 +121,10 @@ class CyclopeanInstrument(Instrument):
 
     def do_set_sampling_interval(self, val):
         self._sampling_interval = val
-
+    
     def do_get_sampling_interval(self):
         return self._sampling_interval
-
+    
     def do_set_is_running(self, val):
         self._is_running = val
         if val: self._start_running()
@@ -132,7 +132,7 @@ class CyclopeanInstrument(Instrument):
     
     def do_get_is_running(self):
         return self._is_running
-
+    
     def do_set_is_recording(self, val):
         self._is_recording = val
         if val: self._start_recording()
@@ -151,7 +151,7 @@ class CyclopeanInstrument(Instrument):
         
     def supported(self):
         return self._supported
-
+    
     def save(self, meta=""):
         pass # not implemented by default
         
@@ -179,9 +179,9 @@ class CyclopeanInstrument(Instrument):
         
         self._instruments[alias] = instruments[name]
         print ' * using', instruments[name].get_name(), 'from', self.get_name()
-
+    
         i = self._instruments[alias]
-
+    
         # iterate through parameters:
         # we need a local variable and the get/set functions
         params = i.get_parameters()
@@ -193,14 +193,14 @@ class CyclopeanInstrument(Instrument):
                 setattr(self, var_name, getattr(i, 'get_' + p)())
             else:
                 setattr(self, var_name, None)
-
+    
             # define the get and set functions
             if 'get_func' in params[p]:
                 self._make_get(alias, p)
                     
             if 'set_func' in params[p]:
                 self._make_set(alias, p)
-
+    
             # add the parameter, qtlab style
             units = ''
             type = types.NoneType
@@ -211,7 +211,7 @@ class CyclopeanInstrument(Instrument):
                                flags = params[p]['flags'],
                                type = type,
                                units = units)
-
+    
         # connect, so changes become visible here immediately
         def f(unused, changes, *arg, **kw):
             for c in changes:
@@ -222,21 +222,21 @@ class CyclopeanInstrument(Instrument):
                     setattr(self, var_name, changes[c])
                     getattr(self, get_name)()
         i.connect('changed', f)
-
+    
         # also make the functions accessible
         funcs = i.get_function_names()
         for f in funcs:
             self._make_func(alias, f)                
-
+    
         return
-
+    
     def _make_get(self, name, param):
         p_name = name + '_' + param
         var_name = '_' + p_name
         setattr(self, 'do_get' + var_name,
                 lambda: getattr(self, var_name))
         return
-
+    
     def _make_set(self, name, param):
         p_name = name + '_' + param
         var_name = '_' + p_name 
@@ -246,7 +246,7 @@ class CyclopeanInstrument(Instrument):
         f.__name__ = 'do_set' + var_name
         setattr(self, 'do_set' + var_name, f)
         return
-
+    
     def _make_func(self, name, func):
         f_name = name + '_' + func
         setattr(self, f_name,

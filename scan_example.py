@@ -14,8 +14,8 @@ from counters import CounterPanel
 add_panel(CounterPanel, title='Counts', sampling=200, ins='counters_demo')
 
 # an example 2d scan
-#from panels.scan2d import Scan2dPanel
-#add_panel(Scan2dPanel, title='APD#1 via stage', sampling=500, ins='dummy_scan')
+from scan2d import Scan2dPanel
+add_panel(Scan2dPanel, title='Scan', sampling=500, ins='scan2d_demo')
 
 #from panels.example_panel import Example
 #add_panel(Example, title='Example', ins='cyclopean_example')

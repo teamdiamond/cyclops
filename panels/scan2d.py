@@ -11,7 +11,6 @@ import numpy
 from panel import Panel
 from ui_scan2d import Ui_Panel
 from PyQt4 import QtCore
-from PyQt4.Qwt5.Qwt import QwtPlot as Qwt
 
 class Scan2dPanel(Panel):
     def __init__(self, parent, *arg, **kw):
@@ -54,8 +53,8 @@ class Scan2dPanel(Panel):
         self._busy = False
 
         # some more local variables for position storage
-        self.position = {'x_position' : self._ins.get_x_position(),
-                         'y_position' : self._ins.get_y_position(), }
+        self.position = {'x_position' : 0., # self._ins.get_x_position(),
+                         'y_position' : 0., } # self._ins.get_y_position(), }
 
     def start_scan(self):
         self._ins.set_xstart(self.ui.xstart.value())

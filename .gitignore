@@ -1,2 +1,6 @@
-
+cyclops_geometry.cfg
 *.bat~
+*~
+*.pyc
+*.swp
+
