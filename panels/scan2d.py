@@ -29,7 +29,7 @@ class Scan2dPanel(Panel):
 
         # enable the cross hair positioning
         self.ui.plot.enable_crosshair('color_plot')
-        self.ui.plot.crosshair_moved.connect(self._ins.move_abs_xy)
+        # self.ui.plot.crosshair_moved.connect(self._ins.move_abs_xy)
         
         # read the instrument parameters and set the input
         # fields accordingly
