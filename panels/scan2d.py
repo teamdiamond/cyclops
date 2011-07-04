@@ -12,7 +12,6 @@ from panel import Panel
 from ui_scan2d import Ui_Panel
 from PyQt4 import QtCore
 
-
 class Scan2dPanel(Panel):
     def __init__(self, parent, *arg, **kw):
         Panel.__init__(self, parent, *arg, **kw)

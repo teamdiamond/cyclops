@@ -24,6 +24,9 @@ from enthought.chaco.tools.cursor_tool import CursorTool, BaseCursorTool
 from enthought.chaco.tools.image_inspector_tool import ImageInspectorTool, \
      ImageInspectorOverlay
 
+### constants
+DEFAULT_CMAP = 'jet'
+
 
 ### Some Helper classes, not meant for users;
 
@@ -150,9 +153,18 @@ class ColorPlot(BasePlot):
 
         self._cbar_axis_format = kw.pop('cbar_axis_format', '')
         self._plotname = kw.pop('plotname', 'color_plot')
+        
         # TODO: enables via kws
-
+        
         BasePlot.__init__(self, parent, **kw)
+
+        # defaults from cyclops config
+        import cyclops
+        if cyclops.config.has_key('plot_colors'):
+            cmap = cyclops.config['plot_colors'].get('colorplot_cmap', 
+                DEFAULT_CMAP)
+            self.set_colormap_by_name(cmap)
+
 
     ### public methods
 
@@ -172,7 +184,7 @@ class ColorPlot(BasePlot):
             value_range = self.plot.color_mapper.range
             self.plot.color_mapper = self._colormap(value_range)
             self._colorbar.color_mapper = self._colormap(value_range)
-            self.plot.request_redraw()
+            self.container.request_redraw()
             
     def set_colormap(self, colormap):
         self._colormap = colormap

@@ -12,5 +12,5 @@ config['plots_dirs'] = [
 
 # appearance
 config['plot_colors'] = {
-	'2dplot_cmap': 'hot',
+	'colorplot_cmap': 'hot',
 }
