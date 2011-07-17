@@ -104,6 +104,13 @@ class CyclopeanInstrument(Instrument):
         self._instruments = {}
         for i in use:
             self._use_instrument(i, use[i])
+
+
+        # internal data fields, especially interesting for transfer of plot
+        # data
+        self._data = {}
+        self.add_function('get_data')
+
         
         # default values
         self.set_sampling_interval(100)
@@ -119,6 +126,12 @@ class CyclopeanInstrument(Instrument):
             'save': False,
             }
 
+    ### methods for data transfer
+    # def get_data(
+
+
+
+    ### Get and set for the common parameters
     def do_set_sampling_interval(self, val):
         self._sampling_interval = val
     
@@ -172,8 +185,6 @@ class CyclopeanInstrument(Instrument):
     def _stop_recording(self):
         pass
 
-    # TODO: instead of specifying manually what should be accessible,
-    # just get everything via get_parameters and get_functions?
     def _use_instrument(self, name, alias):
         from qt import instruments
         
