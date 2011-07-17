@@ -108,9 +108,27 @@ class CyclopeanInstrument(Instrument):
 
         # internal data fields, especially interesting for transfer of plot
         # data
+        #
+        # dictionary that holds the data; format: {'data_name' : array-like, }
+        # instrument administers this by itself
         self._data = {}
-        self.add_function('get_data')
 
+        # tuple that holds ('data_name', (coordinates of most recent data))
+        # instrument should set accordingly after putting data, then
+        # call get_data_update_index to let connected methods know
+        # they can get new data
+        self._data_update_index = ('', ())
+
+        # returns data by name; if a set of slices is given, returns the
+        # sliced data; number of slices must match the dimensions of the data
+        self.add_function('get_data')
+        self.add_function('get_data_shape')
+        self.add_parameter('data_update_index',
+                type=types.TupleType,
+                flags=Instrument.FLAG_GET)
+
+        # debug output for data update index
+        self.connect('changed', self._debug_data_update_index)
         
         # default values
         self.set_sampling_interval(100)
@@ -127,8 +145,21 @@ class CyclopeanInstrument(Instrument):
             }
 
     ### methods for data transfer
-    # def get_data(
+    def get_data(self, name, slices=None):
+        d = self._data[name]
+        if slices == None:
+            return d
+        return d[slices]
 
+    def get_data_shape(self, name):
+        return self._data[name].shape
+
+    def do_get_data_update_index(self):
+        return self._data_update_index
+
+    def _debug_data_update_index(self, unused, changes, *arg, **kw):
+        if 'data_update_index' in changes:
+            print changes['data_update_index']
 
 
     ### Get and set for the common parameters
