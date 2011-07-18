@@ -113,22 +113,33 @@ class CyclopeanInstrument(Instrument):
         # instrument administers this by itself
         self._data = {}
 
-        # tuple that holds ('data_name', (coordinates of most recent data))
+        # tuple that holds ('data_name', [slice objects for all dimensions])
         # instrument should set accordingly after putting data, then
-        # call get_data_update_index to let connected methods know
+        # call get_data_update to let connected methods know
         # they can get new data
-        self._data_update_index = ('', ())
+        self._data_update = ('', [])
+        self._data_reset = ('', ())
 
         # returns data by name; if a set of slices is given, returns the
         # sliced data; number of slices must match the dimensions of the data
         self.add_function('get_data')
         self.add_function('get_data_shape')
-        self.add_parameter('data_update_index',
+        
+        self.add_parameter('data_update',
                 type=types.TupleType,
-                flags=Instrument.FLAG_GET)
+                flags=Instrument.FLAG_GET,
+                doc='''Signalizes that new new data has been added or data
+                has been modified.''')
+        
+        self.add_parameter('data_reset',
+                type=types.TupleType,
+                flags=Instrument.FLAG_GET,
+                doc='''Signalizes that a data field has been reset. The Value
+                contains the the name and shape of the data field. Use also to
+                indicate creation of new data field.''')
 
         # debug output for data update index
-        self.connect('changed', self._debug_data_update_index)
+        # self.connect('changed', self._debug_data_update_index)
         
         # default values
         self.set_sampling_interval(100)
@@ -154,12 +165,15 @@ class CyclopeanInstrument(Instrument):
     def get_data_shape(self, name):
         return self._data[name].shape
 
-    def do_get_data_update_index(self):
-        return self._data_update_index
+    def do_get_data_update(self):
+        return self._data_update
 
-    def _debug_data_update_index(self, unused, changes, *arg, **kw):
-        if 'data_update_index' in changes:
-            print changes['data_update_index']
+    def do_get_data_reset(self):
+        return self._data_reset
+
+    def _debug_data_update(self, unused, changes, *arg, **kw):
+        if 'data_update' in changes:
+            print changes['data_update']
 
 
     ### Get and set for the common parameters

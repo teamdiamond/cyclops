@@ -11,6 +11,7 @@
 #
 # Author: Wolfgang Pfaff <w.pfaff@tudelft.nl>
 
+from numpy import *
 from PyQt4 import QtCore, QtGui, Qt
 from lib.network.object_sharer import helper
 
@@ -21,6 +22,7 @@ class Panel(QtGui.QWidget):
         # default params
         self._ins = None
         self._ins_supported = {}
+        self._data = {}
 
         # process arguments
         # the panel can have a 'main' instrument
@@ -39,7 +41,15 @@ class Panel(QtGui.QWidget):
 
     # implement in child classes to monitor changes
     def _instrument_changed(self, changes):
-        pass
+        if 'data_reset' in changes:
+            d_r = changes['data_reset']
+            self._data[d_r[0]] = zeros(d_r[1])
+
+        if 'data_update' in changes:
+            d_u = changes['data_update']
+            slices = d_u[1]
+            self._data[d_u[0]][slices] = self._ins.get_data(d_u[0], slices)
+
 
     # timer for regular updates that shall not take place via
     # callbacks initiated at the server side
