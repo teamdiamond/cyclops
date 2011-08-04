@@ -12,8 +12,8 @@ adddir = os.path.join(os.getcwd(), '..', 'source')
 sys.path.insert(0, adddir)
 sys.path.append(os.path.join(os.getcwd(), 'source'))
 
-#import sip
-#sip.setapi('QString', 2)
+import sip
+sip.setapi('QString', 2)
 from PyQt4 import QtGui, QtCore
 
 import time
@@ -89,5 +89,5 @@ if __name__ == "__main__":
     mainwindow = MainWindow()
     mainwindow.show()
     
-    # sys.exit(cyclops_app.exec_())
+    sys.exit(cyclops_app.exec_())
 
