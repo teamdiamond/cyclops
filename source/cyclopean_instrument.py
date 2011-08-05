@@ -127,13 +127,13 @@ class CyclopeanInstrument(Instrument):
         
         self.add_parameter('data_update',
                 type=types.TupleType,
-                flags=Instrument.FLAG_GET,
+                flags=Instrument.FLAG_GETSET,
                 doc='''Signalizes that new new data has been added or data
                 has been modified.''')
         
         self.add_parameter('data_reset',
                 type=types.TupleType,
-                flags=Instrument.FLAG_GET,
+                flags=Instrument.FLAG_GETSET,
                 doc='''Signalizes that a data field has been reset. The Value
                 contains the the name and shape of the data field. Use also to
                 indicate creation of new data field.''')
@@ -170,6 +170,13 @@ class CyclopeanInstrument(Instrument):
 
     def do_get_data_reset(self):
         return self._data_reset
+
+    def do_set_data_update(self, val):
+        self._data_update = val
+
+    def do_set_data_reset(self, val):
+        self._data_reset = val
+
 
     def _debug_data_update(self, unused, changes, *arg, **kw):
         if 'data_update' in changes:

@@ -67,7 +67,7 @@
   <widget class="QSlider" name="slider_value">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>180</x>
      <y>40</y>
      <width>160</width>
      <height>21</height>
