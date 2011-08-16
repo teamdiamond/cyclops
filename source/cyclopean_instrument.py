@@ -54,6 +54,8 @@ import gobject
 import types
 import time
 
+from numpy import zeros
+
 class CyclopeanInstrument(Instrument):
     def __init__(self, name, tags=None, use={}):
         Instrument.__init__(self, name, tags=tags)
@@ -127,13 +129,13 @@ class CyclopeanInstrument(Instrument):
         
         self.add_parameter('data_update',
                 type=types.TupleType,
-                flags=Instrument.FLAG_GETSET,
+                flags=Instrument.FLAG_GET,
                 doc='''Signalizes that new new data has been added or data
                 has been modified.''')
         
         self.add_parameter('data_reset',
                 type=types.TupleType,
-                flags=Instrument.FLAG_GETSET,
+                flags=Instrument.FLAG_GET,
                 doc='''Signalizes that a data field has been reset. The Value
                 contains the the name and shape of the data field. Use also to
                 indicate creation of new data field.''')
@@ -155,7 +157,7 @@ class CyclopeanInstrument(Instrument):
             'save': False,
             }
 
-    ### methods for data transfer
+    ### public methods for data transfer
     def get_data(self, name, slices=None):
         d = self._data[name]
         if slices == None:
@@ -171,13 +173,22 @@ class CyclopeanInstrument(Instrument):
     def do_get_data_reset(self):
         return self._data_reset
 
-    def do_set_data_update(self, val):
-        self._data_update = val
+    ### internal methods that are convenient to use to signal changes to
+    ### clients
+    def set_data(self, name, dat, slices=None):
+        if slices == None:
+            self._data[name] = dat
+        else:
+            self._data[name][slices] = dat
+        self._data_update = (name, dat, slices)
+        self.get_data_update()
 
-    def do_set_data_reset(self, val):
-        self._data_reset = val
+    def reset_data(self, name, shape):
+        self._data[name] = zeros(shape)
+        self._data_reset = (name, shape)
+        self.get_data_reset()
 
-
+    ### debug methods
     def _debug_data_update(self, unused, changes, *arg, **kw):
         if 'data_update' in changes:
             print changes['data_update']

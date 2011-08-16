@@ -29,7 +29,11 @@ class Whackyscan(Panel):
         self.ui.stop.pressed.connect(self._stop)
 
     def _go(self):
-        self._ins.go()
+        self._ins.go(callback=self._cb) 
+        return
+
+    def _cb(self, *arg, **kw):
+        print 'callback!', arg, kw
         return
 
     def _stop(self):
@@ -53,7 +57,12 @@ class Whackyscan(Panel):
         return
 
     def _instrument_changed(self, changes):
-        Panel._instrument_changed(self, changes)
+        # Panel._instrument_changed(self, changes)
+        #
+        print changes
+
+        #if changes.has_key('data_update'):
+        #    print changes['data_update']
 
         if changes.has_key('current_z'):
             self.ui.current_z.setValue(int(changes['current_z']))
