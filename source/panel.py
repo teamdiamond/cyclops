@@ -11,6 +11,7 @@
 #
 # Author: Wolfgang Pfaff <w.pfaff@tudelft.nl>
 
+from numpy import *
 from PyQt4 import QtCore, QtGui, Qt
 from lib.network.object_sharer import helper
 
@@ -21,6 +22,7 @@ class Panel(QtGui.QWidget):
         # default params
         self._ins = None
         self._ins_supported = {}
+        self._data = {}
 
         # process arguments
         # the panel can have a 'main' instrument
@@ -39,7 +41,20 @@ class Panel(QtGui.QWidget):
 
     # implement in child classes to monitor changes
     def _instrument_changed(self, changes):
-        pass
+        print changes
+
+        if 'data_reset' in changes:
+            d_r = changes['data_reset']
+            self._data[d_r[0]] = zeros(d_r[1])
+
+        if 'data_update' in changes:
+            d_u = changes['data_update']
+            slices = d_u[2]
+            if slices == None:
+                self._data[d_u[0]] = d_u[1]
+            else:
+                self._data[d_u[0]][slices] = d_u[1]
+
 
     # timer for regular updates that shall not take place via
     # callbacks initiated at the server side
@@ -130,6 +145,8 @@ class PanelDialog(QtGui.QMainWindow):
             return self.ap
         else:
             # in any case, connect instrument changes to callback handler
+            print i.get_name(), i
+
             i.connect('changed', self._instrument_changed_cb)
             i.connect('removed', self._instrument_removed_cb)
 
@@ -172,9 +189,9 @@ class PanelDialog(QtGui.QMainWindow):
         self.ap.ui.instrumentBox.setTitle('Instrument (%s)' % i.get_name())
 
         # connect signals/slots (instrument part): AP to panel/instrument
-        self.ap.ui.instrument_running.toggled.connect(\
+        self.ap.ui.instrument_running.clicked.connect(\
             self.set_instrument_running)
-        self.ap.ui.instrument_recording.toggled.connect(\
+        self.ap.ui.instrument_recording.clicked.connect(\
             self.set_instrument_recording)
         self.ap.ui.instrument_save.clicked.connect(\
             self.instrument_save)
@@ -187,15 +204,15 @@ class PanelDialog(QtGui.QMainWindow):
     # only connected when corresponding features are available
     @QtCore.pyqtSlot(bool)
     def set_instrument_running(self, val):
-        self._panel._ins.set_is_running(val,callback=None)
+        self._panel._ins.set_is_running(val)
 
     @QtCore.pyqtSlot(bool)
     def set_instrument_recording(self, val):
-        self._panel._ins.set_is_recording(val,callback=None)
+        self._panel._ins.set_is_recording(val)
 
     @QtCore.pyqtSlot()
     def instrument_save(self):
-        self._panel._ins.save(meta=self._ins_save_meta, callback=None)
+        self._panel._ins.save(meta=self._ins_save_meta)
 
     @QtCore.pyqtSlot()
     def instrument_meta_changed(self):
@@ -224,9 +241,12 @@ class PanelDialog(QtGui.QMainWindow):
 
     def _instrument_changed_cb(self, unused, changes, *args, **kw):
         if changes.has_key('is_running'):
-            self.ap.ui.instrument_running.setChecked(bool(changes['is_running']))
+            if bool(changes['is_running']) != self.ap.ui.instrument_running.isChecked():
+                self.ap.ui.instrument_running.toggle()
+        
         if changes.has_key('is_recording'):
-            self.ap.ui.instrument_recording.setChecked(bool(changes['is_recording']))
+            if bool(changes['is_recording']) != self.ap.ui.instrument_recording.isChecked():
+                self.ap.ui.instrument_recording.toggle()
         
         # notify the panel so the user can do whatever the hell he wants
         self._panel._instrument_changed(changes)

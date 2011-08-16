@@ -54,6 +54,8 @@ import gobject
 import types
 import time
 
+from numpy import zeros
+
 class CyclopeanInstrument(Instrument):
     def __init__(self, name, tags=None, use={}):
         Instrument.__init__(self, name, tags=tags)
@@ -104,6 +106,42 @@ class CyclopeanInstrument(Instrument):
         self._instruments = {}
         for i in use:
             self._use_instrument(i, use[i])
+
+
+        # internal data fields, especially interesting for transfer of plot
+        # data
+        #
+        # dictionary that holds the data; format: {'data_name' : array-like, }
+        # instrument administers this by itself
+        self._data = {}
+
+        # tuple that holds ('data_name', [slice objects for all dimensions])
+        # instrument should set accordingly after putting data, then
+        # call get_data_update to let connected methods know
+        # they can get new data
+        self._data_update = ('', [])
+        self._data_reset = ('', ())
+
+        # returns data by name; if a set of slices is given, returns the
+        # sliced data; number of slices must match the dimensions of the data
+        self.add_function('get_data')
+        self.add_function('get_data_shape')
+        
+        self.add_parameter('data_update',
+                type=types.TupleType,
+                flags=Instrument.FLAG_GET,
+                doc='''Signalizes that new new data has been added or data
+                has been modified.''')
+        
+        self.add_parameter('data_reset',
+                type=types.TupleType,
+                flags=Instrument.FLAG_GET,
+                doc='''Signalizes that a data field has been reset. The Value
+                contains the the name and shape of the data field. Use also to
+                indicate creation of new data field.''')
+
+        # debug output for data update index
+        # self.connect('changed', self._debug_data_update_index)
         
         # default values
         self.set_sampling_interval(100)
@@ -119,6 +157,44 @@ class CyclopeanInstrument(Instrument):
             'save': False,
             }
 
+    ### public methods for data transfer
+    def get_data(self, name, slices=None):
+        d = self._data[name]
+        if slices == None:
+            return d
+        return d[slices]
+
+    def get_data_shape(self, name):
+        return self._data[name].shape
+
+    def do_get_data_update(self):
+        return self._data_update
+
+    def do_get_data_reset(self):
+        return self._data_reset
+
+    ### internal methods that are convenient to use to signal changes to
+    ### clients
+    def set_data(self, name, dat, slices=None):
+        if slices == None:
+            self._data[name] = dat
+        else:
+            self._data[name][slices] = dat
+        self._data_update = (name, dat, slices)
+        self.get_data_update()
+
+    def reset_data(self, name, shape):
+        self._data[name] = zeros(shape)
+        self._data_reset = (name, shape)
+        self.get_data_reset()
+
+    ### debug methods
+    def _debug_data_update(self, unused, changes, *arg, **kw):
+        if 'data_update' in changes:
+            print changes['data_update']
+
+
+    ### Get and set for the common parameters
     def do_set_sampling_interval(self, val):
         self._sampling_interval = val
     
@@ -172,8 +248,6 @@ class CyclopeanInstrument(Instrument):
     def _stop_recording(self):
         pass
 
-    # TODO: instead of specifying manually what should be accessible,
-    # just get everything via get_parameters and get_functions?
     def _use_instrument(self, name, alias):
         from qt import instruments
         

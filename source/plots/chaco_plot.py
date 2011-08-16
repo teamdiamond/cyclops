@@ -268,6 +268,8 @@ class LinePlot(BasePlot):
 
     def add_y(self, y, yname, **kw):
         self.data.set_data(yname, y)
+        if self.plot.plots.has_key(yname):
+            self.plot.delplot(yname)
         self.plot.plot(('x', yname), name=yname, **kw)
         self.plot.request_redraw()
         
@@ -275,7 +277,10 @@ class LinePlot(BasePlot):
         self.data.set_data('x', x)
 
     def set_y(self, yname, y):
-        self.data.set_data(yname, y)
+       if self.plot.plots.has_key(yname):
+            self.plot.delplot(yname)
+       self.data.set_data(yname, y)
+       self.plot.plot(('x', yname), name=yname, **kw)
         
     def _create_window(self):
         self.data = ArrayPlotData()

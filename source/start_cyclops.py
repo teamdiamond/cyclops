@@ -55,7 +55,8 @@ class _QtDummyHandler(QtTCPHandler):
         helper.add_client(self.socket, self)
 
     def handle(self, data):
-        helper.handle(self.socket, data)
+        if len(data) > 0:
+            data = helper.handle_data(self.socket, data)
         return True
 
 # class _QtDummyHandler
