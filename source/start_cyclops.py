@@ -7,11 +7,11 @@ import logging
 l = logging.getLogger()
 l.setLevel(logging.WARNING)
 
+# make sure the userconfig is loaded
 import os, sys
-adddir = os.path.join(os.getcwd(), '..', 'source')
-sys.path.insert(0, adddir)
-sys.path.append(os.path.join(os.getcwd(), 'source'))
+execfile('userconfig.py')
 
+# this might solve/or cause some errors. (un)comment if necessary
 import sip
 sip.setapi('QString', 2)
 from PyQt4 import QtGui, QtCore

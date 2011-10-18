@@ -24,12 +24,6 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.setupUi(self)
 
         # load the user panel config
-        if cyclops.config.has_key('panels_dirs'):
-            for d in cyclops.config['panels_dirs']:
-                sys.path.append(d)
-        if cyclops.config.has_key('plots_dirs'):
-            for d in cyclops.config['plots_dirs']:
-                sys.path.append(d)
         self.load_user_panels()
 
         # set full screen
@@ -101,7 +95,8 @@ class MainWindow(QtGui.QMainWindow):
 
         # mainwindow geometry;
         try:
-            h, w = config.getint('mainwindow', 'h'), config.getint('mainwindow', 'w')
+            h, w = config.getint('mainwindow', 'h'), \
+                config.getint('mainwindow', 'w')
             self.setGeometry(5, 15, w, h)
         except:
             pass
