@@ -5,7 +5,7 @@ from cyclops import config
 
 # folders
 # location of qtlab
-config['qtlab_dir'] = '/home/wp/measuring/qtlab'
+config['qtlab_dir'] = os.path.join(os.getcwd(), '..', 'qtlab')
 
 # need some modules from qtlab
 sys.path.append(config['qtlab_dir'])
@@ -13,7 +13,7 @@ sys.path.append(os.path.join(config['qtlab_dir'], 'source'))
 
 # location of panels 
 config['panels_dirs'] = [
-    'panels', 'source/panels', '/home/wp/measuring/user/panels' ]
+    'panels', 'source/panels', 'panels' ]
 
 for d in config['panels_dirs']:
     sys.path.append(d)

@@ -14,7 +14,6 @@ from panel import Panel, PanelDialog
 PANEL_CFG = 'cyclops_panels.py'
 GEOMETRY_CFG = 'cyclops_geometry.cfg'
 
-
 class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
@@ -53,7 +52,7 @@ class MainWindow(QtGui.QMainWindow):
                 args += 1
                 execfile(f)
         if args == 0:
-            execfile(self._cyclops_dir + '/' + PANEL_CFG)
+            execfile(os.path.join(os.getcwd(),PANEL_CFG))
 
     
     def closeEvent(self, event):
