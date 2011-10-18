@@ -18,8 +18,8 @@ from scan2d import Scan2dPanel
 add_panel(Scan2dPanel, title='Scan', sampling=500, ins='scan2d_demo')
 
 # a bit more complicated
-from whackyscan_panel import Whackyscan
-add_panel(Whackyscan, title='Complicated Scan', sampling=500, ins='whackyscan')
+#from whackyscan_panel import Whackyscan
+# add_panel(Whackyscan, title='Complicated Scan', sampling=500, ins='whackyscan')
 
 #from panels.example_panel import Example
 #add_panel(Example, title='Example', ins='cyclopean_example')
