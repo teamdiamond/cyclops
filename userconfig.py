@@ -8,8 +8,8 @@ from cyclops import config
 config['qtlab_dir'] = os.path.join(os.getcwd(), '..', 'qtlab')
 
 # need some modules from qtlab
-sys.path.append(config['qtlab_dir'])
-sys.path.append(os.path.join(config['qtlab_dir'], 'source'))
+sys.path.insert(0,config['qtlab_dir'])
+sys.path.insert(1,os.path.join(config['qtlab_dir'], 'source'))
 
 # location of panels 
 config['panels_dirs'] = [

@@ -11,9 +11,10 @@ l.setLevel(logging.WARNING)
 import os, sys
 execfile('userconfig.py')
 
-# this might solve/or cause some errors. (un)comment if necessary
+# we need this for ETS to work properly with pyqt
 import sip
 sip.setapi('QString', 2)
+sip.setapi('QVariant', 2)
 from PyQt4 import QtGui, QtCore
 
 import time
@@ -43,7 +44,7 @@ class QtTCPHandler(GlibTCPHandler, QtCore.QObject):
     def disable_callbacks(self):
         return
 
-    @QtCore.pyqtSlot()
+    # @QtCore.pyqtSlot()
     def _socketwatcher_recv(self, *args):
         self._handle_recv(self.socket, gobject.IO_IN)
 
