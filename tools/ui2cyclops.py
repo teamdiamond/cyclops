@@ -267,7 +267,6 @@ from panel import Panel
 from %s import Ui_Panel
 
 from PyQt4 import QtCore
-from PyQt4.Qwt5 import Qwt
 """ % (p_ui_file[:-3])
 
     s+= """
