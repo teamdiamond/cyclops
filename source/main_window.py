@@ -50,7 +50,9 @@ class MainWindow(QtGui.QMainWindow):
         for f in sys.argv[1:]:
             if f[-3:] == '.py':
                 args += 1
-                execfile(f)
+                print f
+		execfile(f)
+
         if args == 0:
             execfile(os.path.join(os.getcwd(),PANEL_CFG))
 
