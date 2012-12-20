@@ -26,6 +26,7 @@ PORT = 12002
 
 ### some useful things that might get imported by other scripts
 CONFIG_FILE = os.path.join(os.getcwd(), 'userconfig.py')
+print CONFIG_FILE
 
 # methods/classes for QT4 clients that replace the glib-based ones
 class QtTCPHandler(GlibTCPHandler, QtCore.QObject):

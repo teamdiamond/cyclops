@@ -10,10 +10,10 @@ config['qtlab_dir'] = os.path.join(os.getcwd(), '..', 'qtlab')
 # need some modules from qtlab
 sys.path.insert(0, config['qtlab_dir'])
 sys.path.insert(1, os.path.join(config['qtlab_dir'], 'source'))
-
+sys.path.append('D:/measuring/measurement')
 # location of panels 
 config['panels_dirs'] = [
-    'panels', 'source/panels', '../user/panels' ]
+        'panels', 'source/panels', 'D:/measuring/measurement/panels' ]
 
 for d in config['panels_dirs']:
     sys.path.append(d)
