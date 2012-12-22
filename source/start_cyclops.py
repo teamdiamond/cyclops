@@ -9,6 +9,7 @@ l.setLevel(logging.WARNING)
 
 # make sure the userconfig is loaded
 import os, sys
+os.environ['ETS_TOOLKIT'] = 'qt4'
 execfile('userconfig.py')
 
 # we need this for ETS to work properly with pyqt
@@ -16,6 +17,7 @@ import sip
 sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
 from PyQt4 import QtGui, QtCore
+
 
 import time
 import socket
