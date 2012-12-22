@@ -351,6 +351,7 @@ class TimeTracePlot(TracePlot):
     def __init__(self, parent, **kw):
         
         self.display_time = kw.pop('display_time', 0)
+        # self.memory_time = kw.pop('memory_time', 120)
         
         TracePlot.__init__(self, parent, **kw)
 
@@ -375,10 +376,10 @@ class TimeTracePlot(TracePlot):
             while self._x[-1] - self._x[0] > self.display_time:
                 self._x = self._x[1:]
                 self._y = self._y[1:]
+        
         self.data.set_data('x', self._x)
         self.data.set_data('y', self._y)
-        
-        
+             
 
 if __name__ == '__main__':
     _app = QtGui.QApplication.instance()

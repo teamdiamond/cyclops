@@ -41,7 +41,7 @@ class Panel(QtGui.QWidget):
 
     # implement in child classes to monitor changes
     def _instrument_changed(self, changes):
-        print changes
+        # print changes
 
         if 'data_reset' in changes:
             d_r = changes['data_reset']
@@ -145,7 +145,7 @@ class PanelDialog(QtGui.QMainWindow):
             return self.ap
         else:
             # in any case, connect instrument changes to callback handler
-            print i.get_name(), i
+            # print i.get_name(), i
 
             i.connect('changed', self._instrument_changed_cb)
             i.connect('removed', self._instrument_removed_cb)
