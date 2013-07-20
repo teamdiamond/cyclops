@@ -13,25 +13,25 @@
 from cyclops import config
 # appearance
 config['plot_colors'] = {
-	'colorplot_cmap': 'jet',
+	'colorplot_cmap': 'gist_earth',
 }
 
 from counters import CounterPanel
-add_panel(CounterPanel, title='Counts', sampling=200, ins='counters_lt1')
+add_panel(CounterPanel, title='Counts', sampling=200, ins='counters')
 
 from scan2d import Scan2dPanel
-add_panel(Scan2dPanel, title='Stage scan', sampling=500, ins='scan2d_lt1')
-# 
+add_panel(Scan2dPanel, title='Stage scan', sampling=500, ins='scan2d')
+
 from lt1_coordinator import LT1CoordinatorPanel
-add_panel(LT1CoordinatorPanel, title='Control Panel', ins='setup_controller_lt1')
+add_panel(LT1CoordinatorPanel, title='Control Panel', ins='setup_controller')
 
  
 from optimize1d_counts_panel import Optimize1dCountsPanel
-add_panel(Optimize1dCountsPanel, title='Optimize z', ins='opt1d_counts_lt1',
+add_panel(Optimize1dCountsPanel, title='Optimize z', ins='opt1d_counts',
         dimension='z')
-add_panel(Optimize1dCountsPanel, title='Optimize x', ins='opt1d_counts_lt1',
+add_panel(Optimize1dCountsPanel, title='Optimize x', ins='opt1d_counts',
         dimension='x')
-add_panel(Optimize1dCountsPanel, title='Optimize y', ins='opt1d_counts_lt1',
+add_panel(Optimize1dCountsPanel, title='Optimize y', ins='opt1d_counts',
         dimension='y')
 
 
