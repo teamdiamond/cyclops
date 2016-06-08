@@ -83,7 +83,6 @@ if __name__ == "__main__":
     #                          'source/gui/cyclops/style.css'), 'r').read()
     cyclops_app = QtGui.QApplication(sys.argv)
     # cyclops_app.setStyleSheet(style)
-
     # open the socket and start the client.
     # will fail if no connection to qtlab is available   
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
