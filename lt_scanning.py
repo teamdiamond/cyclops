@@ -22,8 +22,8 @@ add_panel(CounterPanel, title='Counts', sampling=200, ins='counters')
 from scan2d import Scan2dPanel
 add_panel(Scan2dPanel, title='Stage scan', sampling=500, ins='scan2d')
 
-from lt3_coordinator import LT3CoordinatorPanel
-add_panel(LT3CoordinatorPanel, title='Control Panel', ins='setup_controller')
+from lt1_coordinator import LT1CoordinatorPanel
+add_panel(LT1CoordinatorPanel, title='Control Panel', ins='setup_controller')
 
  
 from optimize1d_counts_panel import Optimize1dCountsPanel

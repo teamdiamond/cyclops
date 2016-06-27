@@ -22,12 +22,12 @@ IF EXIST C:\Canopy\User\Scripts\python.exe (
 :mark1
 
 IF EXIST "%PYTHON_PATH%\ipython-script.py" (
-    start Console -w "Cyclops" -r "/k %PYTHON_PATH%\python.exe %PYTHON_PATH%\ipython-script.py -i source/start_cyclops.py lt1_scanning.py"
+    start Console -w "Cyclops" -r "/k %PYTHON_PATH%\python.exe %PYTHON_PATH%\ipython-script.py -i source/start_cyclops.py lt_scanning.py"
     GOTO EOF
 )
 
 :: use this for python27 with ipython 0.11
-:: start Console -w "Cyclops" -r "/k c:\python27\python c:\python27\scripts\ipython-script.py -i source/start_cyclops.py lt1_scanning.py"
+:: start Console -w "Cyclops" -r "/k c:\python27\python c:\python27\scripts\ipython-script.py -i source/start_cyclops.py lt_scanning.py"
 
 echo Failed to run Cyclops
 pause
