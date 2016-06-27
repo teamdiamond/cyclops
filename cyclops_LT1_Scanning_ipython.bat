@@ -1,8 +1,7 @@
 :: cyclops_example.bat
 :: runs and example cyclops configuration on windows
 
-
-:: SET PATH=%CD%\..\qtlab\3rd_party\Console2\;%PATH%
+SET PATH=C:\PROGRA~2\Console2\;%PATH%
 SET QT_API=pyqt
 :: SET PATH=C:\Qt\2010.02.1\qt\bin;C:\Qt\2010.02.1\bin;C:\Qt\2010.02.1\mingw\bin;%PATH%
 
