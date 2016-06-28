@@ -202,6 +202,8 @@ class CyclopeanInstrument(Instrument):
         return self._sampling_interval
     
     def do_set_is_running(self, val):
+        print val
+        
         self._is_running = val
         if val: self._start_running()
         else: self._stop_running()

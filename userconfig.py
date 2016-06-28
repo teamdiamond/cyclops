@@ -13,7 +13,7 @@ sys.path.insert(1, os.path.join(config['qtlab_dir'], 'source'))
 
 # location of panels 
 config['panels_dirs'] = [
-    'panels', 'source/panels', '../user/panels' ]
+    'panels', 'source/panels', '../measurement/panels' ]
 
 for d in config['panels_dirs']:
     sys.path.append(d)
