@@ -9,15 +9,18 @@ l.setLevel(logging.WARNING)
 
 # make sure the userconfig is loaded
 import os, sys
-os.environ['ETS_TOOLKIT'] = 'qt4'
 execfile('userconfig.py')
 
 # we need this for ETS to work properly with pyqt
 import sip
+sip.setapi('QDate', 2)
+sip.setapi('QTime', 2)
 sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
+sip.setapi('QDateTime', 2)
+sip.setapi('QTextStream', 2)
+sip.setapi('QUrl', 2)
 from PyQt4 import QtGui, QtCore
-
 
 import time
 import socket
@@ -28,6 +31,7 @@ PORT = 12002
 
 ### some useful things that might get imported by other scripts
 CONFIG_FILE = os.path.join(os.getcwd(), 'userconfig.py')
+LOGGING_FILE = os.path.join(os.getcwd(), 'source', 'cyclops_logging.py')
 
 # methods/classes for QT4 clients that replace the glib-based ones
 class QtTCPHandler(GlibTCPHandler, QtCore.QObject):
@@ -73,6 +77,13 @@ if __name__ == "__main__":
     # load user config
     if os.path.exists(CONFIG_FILE):
         execfile(CONFIG_FILE)
+
+    #debug_;logging
+    debug = False
+    if debug:
+        if os.path.exists(LOGGING_FILE):
+            execfile(LOGGING_FILE)
+            set_debug(True)
 
 
     # start our main application
