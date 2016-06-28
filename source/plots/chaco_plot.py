@@ -1,5 +1,5 @@
 # chaco plotting for use with cyclops
-from enthought.etsconfig.etsconfig import ETSConfig
+from traits.etsconfig.etsconfig import ETSConfig
 ETSConfig.toolkit = "qt4"
 
 # major lib imports
@@ -11,32 +11,18 @@ from numpy import linspace, r_, meshgrid, sinc, zeros, exp
 from PyQt4 import QtGui, Qt, QtCore
 #from enthought.qt import QtGui, Qt, QtCore
 
-# enthought stuff
-try:
-    from enthought.enable.api import BaseTool, Window
-    from enthought.traits.api import HasTraits, Instance, DelegatesTo, Delegate
+# enthought
+from enable.api import BaseTool, Window
+from traits.api import HasTraits, Instance, DelegatesTo, Delegate
 
-    # chaco
-    from enthought.chaco import default_colormaps
-    from enthought.chaco.api import ArrayPlotData, ColorBar, HPlotContainer, \
-        LinearMapper, Plot, PlotAxis
-    from enthought.chaco.tools.api import PanTool, ZoomTool
-    from enthought.chaco.tools.cursor_tool import CursorTool, BaseCursorTool
-    from enthought.chaco.tools.image_inspector_tool import ImageInspectorTool, \
-         ImageInspectorOverlay
-
-except ImportError: # on my xubuntu system at least, these modules are not enthought.* submodules
-    from enable.api import BaseTool, Window
-    from traits.api import HasTraits, Instance, DelegatesTo, Delegate
-
-    # chaco
-    from chaco import default_colormaps
-    from chaco.api import ArrayPlotData, ColorBar, HPlotContainer, \
-        LinearMapper, Plot, PlotAxis
-    from chaco.tools.api import PanTool, ZoomTool
-    from chaco.tools.cursor_tool import CursorTool, BaseCursorTool
-    from chaco.tools.image_inspector_tool import ImageInspectorTool, \
-         ImageInspectorOverlay
+# chaco
+from chaco import default_colormaps
+from chaco.api import ArrayPlotData, ColorBar, HPlotContainer, \
+    LinearMapper, Plot, PlotAxis
+from chaco.tools.api import PanTool, ZoomTool
+from chaco.tools.cursor_tool import CursorTool, BaseCursorTool
+from chaco.tools.image_inspector_tool import ImageInspectorTool, \
+     ImageInspectorOverlay
 
 ### constants
 DEFAULT_CMAP = 'jet'
@@ -100,6 +86,7 @@ class BasePlot(QtGui.QWidget):
     crosshair_dragged = QtCore.pyqtSignal(bool)
     mouse_moved = QtCore.pyqtSignal(float, float)
     
+
     def __init__(self, parent, **kw):
         QtGui.QWidget.__init__(self, parent)
 
