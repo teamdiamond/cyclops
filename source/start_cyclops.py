@@ -9,17 +9,20 @@ l.setLevel(logging.WARNING)
 
 # make sure the userconfig is loaded
 import os, sys
+os.environ['ETS_TOOLKIT'] = 'qt4'
 execfile('userconfig.py')
 
 # we need this for ETS to work properly with pyqt
 import sip
-sip.setapi('QDate', 2)
-sip.setapi('QTime', 2)
+
+#### The QDate is set later in prepare_pyqt4() in pyface/qt/__init__, with API version 1, and not version 2. To figure out with Tim who made the change which API should be changed. - Anais 2016-07-07
+#sip.setapi('QDate', 2)
+#sip.setapi('QTime', 2)
 sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
-sip.setapi('QDateTime', 2)
-sip.setapi('QTextStream', 2)
-sip.setapi('QUrl', 2)
+#sip.setapi('QDateTime', 2)
+#sip.setapi('QTextStream', 2)
+#sip.setapi('QUrl', 2)
 from PyQt4 import QtGui, QtCore
 
 import time
