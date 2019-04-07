@@ -1,3 +1,6 @@
+
+
+
 # Cyclops client for QTLab
 #
 # Author: Wolfgang Pfaff <w.pfaff@tudelft.nl>
@@ -27,7 +30,7 @@ import socket
 import gobject
 from lib.network.object_sharer import helper
 from lib.network.tcpserver import GlibTCPHandler
-PORT = 12002
+PORT = 12005
 
 ### some useful things that might get imported by other scripts
 CONFIG_FILE = os.path.join(os.getcwd(), 'userconfig.py')
@@ -36,6 +39,7 @@ LOGGING_FILE = os.path.join(os.getcwd(), 'source', 'cyclops_logging.py')
 # methods/classes for QT4 clients that replace the glib-based ones
 class QtTCPHandler(GlibTCPHandler, QtCore.QObject):
     def __init__(self, sock, client_address, server, packet_len=False):
+        print 'initializing QtTCP Handler, params:'
         QtCore.QObject.__init__(self)
         GlibTCPHandler.__init__(self, sock, client_address, server, packet_len)
 
@@ -57,8 +61,12 @@ class QtTCPHandler(GlibTCPHandler, QtCore.QObject):
 # class QtTCPHandler
 class _QtDummyHandler(QtTCPHandler):
     def __init__(self, sock, client_address, server):
+        print 'initializing Dummy Handler, params:'
+        print sock, client_address,server
         QtTCPHandler.__init__(self, sock, client_address, server,
                 packet_len=True)
+        print 'adding client'
+        print self.socket
         helper.add_client(self.socket, self)
 
     def handle(self, data):
@@ -92,15 +100,19 @@ if __name__ == "__main__":
     # not using styles atm, at some point later...
     #style = open(os.path.join(os.getcwd(),
     #                          'source/gui/cyclops/style.css'), 'r').read()
+    
     cyclops_app = QtGui.QApplication(sys.argv)
     # cyclops_app.setStyleSheet(style)
     # open the socket and start the client.
-    # will fail if no connection to qtlab is available   
+    # will fail if no connection to qtlab is available     
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+   
     sock.connect(('localhost', PORT))    
+
     handler = _QtDummyHandler(sock, 'client', 'server')
     
     mainwindow = MainWindow()
+
     mainwindow.show()
     
     sys.exit(cyclops_app.exec_())

@@ -14,7 +14,6 @@ sys.path.insert(1, os.path.join(config['qtlab_dir'], 'source'))
 # location of panels 
 config['panels_dirs'] = [
     'panels', 'source/panels', 'D:/measuring/measurement/panels' ]
-    'panels', 'source/panels', '../measurement/panels' ]
 
 for d in config['panels_dirs']:
     sys.path.append(d)
@@ -30,3 +29,5 @@ for d in config['plots_dirs']:
 config['plot_colors'] = {
 	'colorplot_cmap': 'hot',
 }
+
+
